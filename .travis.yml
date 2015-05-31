@@ -41,7 +41,9 @@ before_install:
   
 install: composer update $COMPOSER_FLAGS --prefer-dist
 
-before_script: vendor/symfony-cmf/testing/bin/travis/phpcr_odm_doctrine_dbal.sh
+before_script:
+  - if [[ "$COMPOSER_FLAGS" == "--prefer-lowest" ]]; then composer remove sebastian/exporter; fi
+  - vendor/symfony-cmf/testing/bin/travis/phpcr_odm_doctrine_dbal.sh
 
 script: phpunit --coverage-text
 
