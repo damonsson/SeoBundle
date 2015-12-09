@@ -41,9 +41,9 @@ class SeoFrontendTest extends BaseTestCase
     public function testDefaultUsage()
     {
         $crawler = $this->getClient()->request('GET', '/content/content-1');
-        $res = $this->getClient()->getResponse();
+        $response = $this->getClient()->getResponse();
 
-        $this->assertEquals(200, $res->getStatusCode());
+        $this->assertResponseSuccess($response);
         $this->assertCount(1, $crawler->filter('html:contains("Content 1")'));
 
         //test the title
@@ -74,9 +74,9 @@ class SeoFrontendTest extends BaseTestCase
     public function testExtractors()
     {
         $crawler = $this->getClient()->request('GET', '/content/strategy-content');
-        $res = $this->getClient()->getResponse();
+        $response = $this->getClient()->getResponse();
 
-        $this->assertEquals(200, $res->getStatusCode());
+        $this->assertResponseSuccess($response);
         $this->assertCount(1, $crawler->filter('html:contains("content of strategy test.")'));
 
         //test the title
@@ -110,9 +110,9 @@ class SeoFrontendTest extends BaseTestCase
     public function testExtraProperties($expectedType, $expectedKey, $expectedValue)
     {
         $crawler = $this->getClient()->request('GET', '/content/content-extra');
-        $res = $this->getClient()->getResponse();
+        $response = $this->getClient()->getResponse();
 
-        $this->assertEquals(200, $res->getStatusCode());
+        $this->assertResponseSuccess($response);
         $this->assertCount(1, $crawler->filter('html:contains("Content extra")'));
 
         //test the meta tag entries
@@ -137,9 +137,9 @@ class SeoFrontendTest extends BaseTestCase
     public function testAlternateLanguages()
     {
         $crawler = $this->getClient()->request('GET', '/en/alternate-locale-content');
-        $res = $this->getClient()->getResponse();
+        $response = $this->getClient()->getResponse();
 
-        $this->assertEquals(200, $res->getStatusCode());
+        $this->assertResponseSuccess($response);
         $this->assertCount(1, $crawler->filter('html:contains("Alternate locale content")'));
 
         $linkCrawler = $crawler->filter('head > link');
@@ -147,9 +147,9 @@ class SeoFrontendTest extends BaseTestCase
         $this->assertEquals($expectedArray, $linkCrawler->extract(array('rel', 'href', 'hreflang')));
 
         $crawler = $this->getClient()->request('GET', '/de/alternate-locale-content');
-        $res = $this->getClient()->getResponse();
+        $response = $this->getClient()->getResponse();
 
-        $this->assertEquals(200, $res->getStatusCode());
+        $this->assertResponseSuccess($response);
         $this->assertCount(1, $crawler->filter('html:contains("Alternative Sprachen")'));
 
         $linkCrawler = $crawler->filter('head > link');
@@ -160,9 +160,9 @@ class SeoFrontendTest extends BaseTestCase
     public function testErrorHandling()
     {
         $crawler = $this->client->request('GET', '/content/content-1/content-depp');
-        $res = $this->client->getResponse();
+        $response = $this->client->getResponse();
 
-        $this->assertEquals(404, $res->getStatusCode());
+        $this->assertResponseSuccess($response);
 
         $this->assertCount(1, $crawler->filter('html:contains("Exception-Test")')); // the configured template was chosen
         $this->assertCount(1, $crawler->filter('html:contains("parent - content-1")'));
@@ -178,9 +178,9 @@ class SeoFrontendTest extends BaseTestCase
     public function testErrorHandlingForExcludedPath()
     {
         $crawler = $this->client->request('GET', '/content/content-1/content-excluded');
-        $res = $this->client->getResponse();
+        $response = $this->client->getResponse();
 
-        $this->assertEquals(404, $res->getStatusCode());
+        $this->assertResponseSuccess($response);
 
         $this->assertCount(0, $crawler->filter('html:contains("Exception-Test")')); // the default template was chosen
         $this->assertCount(1, $crawler->filter('html:contains("No route found for")'));
@@ -189,9 +189,9 @@ class SeoFrontendTest extends BaseTestCase
     public function testLanguageMetaTag()
     {
         $crawler = $this->getClient()->request('GET', '/en/alternate-locale-content');
-        $res = $this->getClient()->getResponse();
+        $response = $this->getClient()->getResponse();
 
-        $this->assertEquals(200, $res->getStatusCode());
+        $this->assertResponseSuccess($response);
 
         //test the meta tag entry
         $metaCrawler = $crawler->filter('head > meta')->reduce(function (Crawler $node) {

@@ -36,7 +36,7 @@ class SitemapTest extends BaseTestCase
         $this->client->request('GET', '/sitemap.'.$format);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
+        $this->assertResponseSuccess($response);
         $content = $response->getContent();
         if ('html' === $format || 'xml' === $format) {
             $this->assertXmlStringEqualsXmlString($expected, $content);
@@ -50,7 +50,7 @@ class SitemapTest extends BaseTestCase
         $this->client->request('GET', '/frequent.json');
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
+        $this->assertResponseSuccess($response);
         $this->assertContains('"always"', $response->getContent());
     }
 
@@ -59,7 +59,7 @@ class SitemapTest extends BaseTestCase
         $this->client->request('GET', '/nonexisting.json');
         $response = $this->client->getResponse();
 
-        $this->assertEquals(404, $response->getStatusCode(), $response->getContent());
+        $this->assertResponseSuccess($response);
         $this->assertContains('Unknown sitemap', $response->getContent());
     }
 
